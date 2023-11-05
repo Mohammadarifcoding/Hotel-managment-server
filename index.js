@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const port = process.env.PORT || 5000
 const cors  = require('cors')
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cookieParser = require('cookie-parser')
 
 
@@ -85,8 +85,13 @@ async function run() {
 
     })
 
+    app.get('/api/v1/:Id',async(req,res)=>{
+      const Id = req.params.Id
+      const query = { _id : new ObjectId(Id)}
+      const result = await RoomsCollection.findOne(query)
+      res.send(result)
+    })
     
-
 
 
     // Send a ping to confirm a successful connection
