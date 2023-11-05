@@ -36,6 +36,7 @@ const client = new MongoClient(uri, {
 
  const ServiceCollection =  client.db('ElevenAssignment').collection('services')
  const RoomsCollection =  client.db('ElevenAssignment').collection('Rooms')
+ const SeatCollection =  client.db('ElevenAssignment').collection('Seats')
 
 async function run() {
   try {
@@ -53,7 +54,7 @@ async function run() {
         const result = await ServiceCollection.insertOne(data)
         res.send(result)
     })
-
+    
     app.get('/api/v1/rooms',async(req,res)=>{
       
       const sort = {}
@@ -68,9 +69,26 @@ async function run() {
         projection: {  img: 1 , 
           priceRange : 1}
     };
+
       const result = await RoomsCollection.find({},options).sort(sort).toArray()
       res.send(result)
     })
+
+    app.get('/api/v1/seats/:roomId',async(req,res)=>{
+      const parameter = req.params.roomId
+      console.log(parameter)
+      const query = { roomId : parameter}
+      const result = await SeatCollection.find(query).toArray()
+      console.log(result)
+      
+      res.send(result)
+
+    })
+
+    
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
