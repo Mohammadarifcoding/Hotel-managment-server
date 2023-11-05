@@ -9,7 +9,10 @@ const cookieParser = require('cookie-parser')
 
 
 
-app.use(cors())
+app.use(cors({
+  origin:['http://localhost:5173'],
+  credentials:true,
+}))
 app.use(express.json())
 app.use(cookieParser())
 
@@ -32,6 +35,7 @@ const client = new MongoClient(uri, {
     // Collection
 
  const ServiceCollection =  client.db('ElevenAssignment').collection('services')
+ const RoomsCollection =  client.db('ElevenAssignment').collection('Rooms')
 
 async function run() {
   try {
@@ -48,6 +52,24 @@ async function run() {
         const data = req.body
         const result = await ServiceCollection.insertOne(data)
         res.send(result)
+    })
+
+    app.get('/api/v1/rooms',async(req,res)=>{
+      
+      const sort = {}
+      if(req.query.order == 'asec'){
+        sort.priceRange = 1
+      }
+      else if (req.query.order == 'desc'){
+        sort.priceRange = -1
+      }
+      console.log(sort)
+      const options = {
+        projection: {  img: 1 , 
+          priceRange : 1}
+    };
+      const result = await RoomsCollection.find({},options).sort(sort).toArray()
+      res.send(result)
     })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
