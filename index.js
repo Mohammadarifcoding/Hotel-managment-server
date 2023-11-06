@@ -37,6 +37,7 @@ const client = new MongoClient(uri, {
  const ServiceCollection =  client.db('ElevenAssignment').collection('services')
  const RoomsCollection =  client.db('ElevenAssignment').collection('Rooms')
  const SeatCollection =  client.db('ElevenAssignment').collection('Seats')
+ const Booked =  client.db('ElevenAssignment').collection('Booked')
 
 async function run() {
   try {
@@ -92,6 +93,30 @@ async function run() {
       res.send(result)
     })
     
+    app.put('/api/v1/RoomSeat/:id',async(req,res)=>{
+      const id = req.params.id
+      const body = req.body
+      const query = {_id : new ObjectId(id)}
+      const available = body.available; 
+      const bookedDate = body.bookedDate;
+      const option = {upsert: false}
+      const value = {
+        $set: {
+         available : available
+        },
+        $push: {
+          bookedDate : bookedDate
+        }
+      }
+      const result = await SeatCollection.updateOne(query,value,option)
+      res.send(result)
+    })
+
+    app.post('/api/v1/booked',async(req,res)=>{
+      const body = req.body
+      const result = await Booked.insertOne(body)
+      res.send(result)
+    })
 
 
     // Send a ping to confirm a successful connection
