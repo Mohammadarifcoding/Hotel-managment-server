@@ -19,9 +19,8 @@ app.use(cookieParser())
 // Eleven-Assignment
 // T81vKy5a32hRzCQI
 
+const uri = `mongodb+srv://${process.env.VITE_USERNAME}:${process.env.VITE_PASS}@cluster0.pdvgnv8.mongodb.net/?retryWrites=true&w=majority`;
 
-
-const uri = "mongodb+srv://Eleven-Assignment:T81vKy5a32hRzCQI@cluster0.pdvgnv8.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
