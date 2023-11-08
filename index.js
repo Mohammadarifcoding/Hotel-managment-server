@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser')
 
 
 app.use(cors({
-  origin:['http://localhost:5173'],
+  origin:['http://localhost:5173','https://assignment-project-60ccf.web.app'],
   credentials:true,
 }))
 app.use(express.json())
@@ -58,7 +58,7 @@ async function run() {
 
 
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+   
 
     app.get('/api/v1/myBookings',verifyToken,async(req,res)=>{
       console.log(req.user.email)
@@ -193,11 +193,8 @@ async function run() {
         sort.priceRange = -1
       }
       console.log(sort)
-      const options = {
-        projection: {  img: 1 , 
-          priceRange : 1}
-    };
-      const result = await RoomsCollection.find({},options).sort(sort).toArray()
+      
+      const result = await RoomsCollection.find().sort(sort).toArray()
       res.send(result)
     })
 
@@ -299,8 +296,7 @@ async function run() {
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+   
   } finally {
     // Ensures that the client will close when you finish/error
    
